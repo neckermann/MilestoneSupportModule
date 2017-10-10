@@ -1,3 +1,23 @@
+function Test-CompConnection($computer){
+    $works=$true
+    if (Test-Connection $computer -Count 1 -Quiet){
+        try{
+            Get-WmiObject -Class win32_bios -ComputerName $computer -ErrorAction Stop | Out-Null
+        }catch{
+            $works=$false
+            Write-Host "Was not able to connect to WMI Service on $computer. Check firewall settings"
+        }
+
+    }else{
+        Write-Host "Was not able to connect to $computer. Check the computer is on."
+        $works=$false
+    }
+    return $works
+}
+
+
+
+
 function Get-MileStoneEventLog{
     [CmdletBinding()]
     Param(
